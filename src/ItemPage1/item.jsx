@@ -191,7 +191,7 @@ export default function Item() {
 										<Select
 											labelId="demo-simple-select-label"
 											id="demo-simple-select"
-											value={owner}
+											value={ownerId}
 											onChange={handleChange}
 										>
 											{ownerBook.map((owner1,i) => (

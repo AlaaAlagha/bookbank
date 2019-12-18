@@ -8,6 +8,8 @@ import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import NavBar from '../HomePage/NavBar';
 import Avatar from '@material-ui/core/Avatar';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -158,14 +160,15 @@ function UserProfile(props) {
           <Grid container spacing={4}>
             <Grid item>
               <br /> <br /><br /><br /><br /><br />
-              <Avatar className={classes.avatar} src={imageAsUrl} alt="Profile picture"></Avatar>
+              <Avatar className={classes.avatar} src={imageAsUrl} alt="Profile picture">
+              </Avatar>
               <Button variant="contained" component="label">
                 Edit your profile
 						<input type="file" onChange={handleImageAsFile} style={{ display: 'none' }} />
               </Button>
               <Button variant="contained" onClick={handleFireBaseUpload}>
                 Save Photo
-					</Button>
+					  </Button>
             </Grid>
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={9}>
