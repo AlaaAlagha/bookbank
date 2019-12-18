@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { storage } from '../firebase/firebase';
@@ -54,6 +55,7 @@ export default function AddBook() {
 	const [ university, setUni ] = React.useState('');
 	const [ name, setName ] = React.useState('');
 	const [ description, setDesc ] = React.useState('');
+	const [books, setbooks] = React.useState([]);
 	// const [ imgUrl, setimgUrl ] = React.useState('');
 	const [ univs, setUnivs ] = React.useState([]);
 	const inputLabel = React.useRef(null);
@@ -123,6 +125,10 @@ export default function AddBook() {
 			});
 	}, []);
 
+	
+	
+
+
 	const findChoosenUnivId = (university) => {
 		for (var i = 0; i < univs.length; i++) {
 			if (univs[i].universityName === university) {
@@ -131,6 +137,11 @@ export default function AddBook() {
 		}
 	};
 	const handleSumbit = (event) => {
+		var path = window.location.href;
+		console.log(path)
+		var myPath = path.split('/');
+		var univId = myPath[4];
+
 		event.preventDefault();
 		const universityId = findChoosenUnivId(university);
 		var InfoBook = {
@@ -156,6 +167,18 @@ export default function AddBook() {
 			});
 			alert("You added New Book")
 		console.log('All information of Book from front-end side: ', InfoBook);
+
+		axios
+			.get(`http://localhost:8000/university/${univId}`)
+			.then((res) => {
+				//console.log(res);
+				// let universities = res.data.universities;
+				setbooks(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	
 	};
 
 	const onUniChange = (event) => {
@@ -244,9 +267,15 @@ export default function AddBook() {
 					</div>
 					<br />
 					<br />
+					<Link
+						href={`/university/${books.universityId}/book/${books._id}`}
+						style={{ color: 'white' }} >
 					<Button variant="contained" type="submit" >
 						Add Book
 					</Button>
+
+					</Link>
+					
 				</form>
 			</Container>
 		</div>
