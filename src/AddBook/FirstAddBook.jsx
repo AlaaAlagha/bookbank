@@ -156,20 +156,7 @@ export  const FirstAddBook = (props) => {
 
     //-----------------------------Search related to University Name-----------------------------
    
-    const handleChange = event => setSearchValue(event.target.value);
-    RegExp.quote = function(searchValue) {
-    return searchValue.replace(/([.?*+^$[\]\\(){}|-])/gi, "\\$1");
-    };
-    const regex = new RegExp(RegExp.quote(searchValue), 'gi')
-    var  searchItems = [{_id: "5def94b2247ca906026f782c", bookName: "ssssssc", bookCover: "https://images-na.ssl-images-amazon.com/images/I/51KPj3gS0vL.jpg"}]
     
-    searchItems = allbooksOfUniv.filter(function (hero) {
-    if (allbooksOfUniv) {
-      if (searchValue) {
-        return hero.bookName.match(regex);
-      }
-    }
-    });
     // console.log("Seaaaacrh",searchItems)
 
     //-----------------------------To get all universities for dropdownList-----------------------------
@@ -191,11 +178,11 @@ export  const FirstAddBook = (props) => {
         const onUniChange = event => {
         console.log("The University is:  ",event.target.value);
         setChoosenUniv(event.target.value);
-        var univId= findChoosenUnivId(choosenUniv);
-        axios.get(`http://localhost:8000/university/${univId}`)
+        // var univId= findChoosenUnivId(choosenUniv);
+        axios.get(`http://localhost:8000/university/${choosenUniv}`)
         .then(res => {
-          setAllbooksOfUniv(res.data);
-          console.log("All the books related to universityName11",res.data)
+          setAllbooksOfUniv(res.data.universityBooks);
+          console.log("All the books related to universityName11",res.data.universityBooks)
         })
         .catch(err => {
           console.log(err);
@@ -215,7 +202,7 @@ export  const FirstAddBook = (props) => {
     axios
 			.post(`http://localhost:8000/profile/${userid}/AddDonatedBook`, {
         userId: userIdFromToken,
-        bookId: searchItems.bookId
+        // bookId: searchItems.bookId
 			})
 			.then((response) => {
 				console.log(response.data);
@@ -225,8 +212,8 @@ export  const FirstAddBook = (props) => {
       });
       alert("You added New Book")
    }
-   console.log("boook iiid",searchItems.bookId)
-   console.log("user iiid",userIdFromToken)
+  //  console.log("boook iiid",searchItems.bookId)
+  //  console.log("user iiid",userIdFromToken)
 
 
  
@@ -238,6 +225,20 @@ export  const FirstAddBook = (props) => {
           }
         }
       };
+
+      const handleChange = event => setSearchValue(event.target.value);
+    RegExp.quote = function(searchValue) {
+    return searchValue.replace(/([.?*+^$[\]\\(){}|-])/gi, "\\$1");
+    };
+    const regex = new RegExp(RegExp.quote(searchValue), 'gi')
+   
+    var searchItems = allbooksOfUniv.filter(function (hero) {
+    if (allbooksOfUniv) {
+      if (searchValue) {
+        return hero.bookName.match(regex);
+      }
+    }
+    });
     
       return (
        <div>
@@ -262,7 +263,7 @@ export  const FirstAddBook = (props) => {
                 onChange={onUniChange}
               >
                 {allUnivs.map((univ) => (
-                <MenuItem key={univ._id} value={univ.universityName}>{univ.universityName}</MenuItem>
+                <MenuItem key={univ._id} value={univ._id}>{univ.universityName}</MenuItem>
                  ))}
               </Select>
               <div>

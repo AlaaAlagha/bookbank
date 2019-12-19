@@ -147,6 +147,14 @@ function UserProfile(props) {
       })
   }, []);
 
+  axios.post()
+  .then((response) => {
+    console.log(response.data);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
   const [user, setUser] = React.useState('');
   const [value, setValue] = React.useState('recents');
 
