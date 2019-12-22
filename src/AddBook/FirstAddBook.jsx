@@ -23,10 +23,10 @@ import jwt_decode from 'jwt-decode';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
-        minWidth: 350
+        minWidth: '100%'
     },
     textfield: {
-        minWidth: 350
+        minWidth: '100%'
     },
     root: {
         flexGrow: 1,
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
       searchBar: {
         background: 'transparent',
         boxShadow: 'none',
-        minWidth: 300,
+        minWidth: '100%',
         paddingLeft: 0
       },
       paper: {
@@ -71,13 +71,22 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
       },
       inputRoot: {
+        width: 490,
         color: 'inherit',
+      },
+      formStyle: {
+        margin: 'auto',
+        width: '40%',
+        marginTop: 40
+      },
+      textfield: {
+        minWidth: '100%',
+        backgroundColor: 'rgb(203, 231, 255)'
       },
       result: {
         position: 'absolute',
         background: 'white',
         color: 'gray',
-        boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
         borderRadius: 4
       },
       inputInput: {
@@ -85,7 +94,7 @@ const useStyles = makeStyles(theme => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-          width: 290,
+          width: '100%',
         },
       },
       imgBook: {
@@ -99,11 +108,8 @@ const useStyles = makeStyles(theme => ({
     result: {
       position: 'absolute',
       background: 'white',
-      // color: 'gray',
-      boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
       borderRadius: 4,
       width: '20%',
-      // right: '22%',
       height:'100%'
     },
     BookImg: {
@@ -120,15 +126,37 @@ const useStyles = makeStyles(theme => ({
     searchImg: {
       borderRight: '4px solid #77b748'
     },
+    h2: {
+      textAlign: 'center',
+      marginTop: 100,
+      fontSize: 40,
+      color: 'gray'
+    },
     linkGrid: {
       paddingLeft: 15
+    },
+    submitBut: {
+      width: '100%',
+      marginTop: 12,
+      color: 'white',
+      background: '#76b646',
+      borderBottom: '2px solid #438e0a'
+    },
+    paragraf:{
+      marginTop: 20,
+      color: 'navy'
+    },
+    subBut: {
+      width: 493,
+    marginLeft: -10,
+    marginBottom: 5
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: 290,
+        width: '100%',
         // '&:focus': {
         //   width: 200,
         // },
@@ -156,7 +184,20 @@ export  const FirstAddBook = (props) => {
 
     //-----------------------------Search related to University Name-----------------------------
    
+    const handleChange = event => setSearchValue(event.target.value);
+    RegExp.quote = function(searchValue) {
+    return searchValue.replace(/([.?*+^$[\]\\(){}|-])/gi, "\\$1");
+    };
+    const regex = new RegExp(RegExp.quote(searchValue), 'gi')
+    var  searchItems = [{_id: "5def94b2247ca906026f782c", bookName: "ssssssc", bookCover: "https://images-na.ssl-images-amazon.com/images/I/51KPj3gS0vL.jpg"}]
     
+    searchItems = allbooksOfUniv.filter(function (hero) {
+    if (allbooksOfUniv) {
+      if (searchValue) {
+        return hero.bookName.match(regex);
+      }
+    }
+    });
     // console.log("Seaaaacrh",searchItems)
 
     //-----------------------------To get all universities for dropdownList-----------------------------
@@ -178,11 +219,11 @@ export  const FirstAddBook = (props) => {
         const onUniChange = event => {
         console.log("The University is:  ",event.target.value);
         setChoosenUniv(event.target.value);
-        // var univId= findChoosenUnivId(choosenUniv);
-        axios.get(`http://localhost:8000/university/${choosenUniv}`)
+        var univId= findChoosenUnivId(choosenUniv);
+        axios.get(`http://localhost:8000/university/${univId}`)
         .then(res => {
-          setAllbooksOfUniv(res.data.universityBooks);
-          console.log("All the books related to universityName11",res.data.universityBooks)
+          setAllbooksOfUniv(res.data);
+          console.log("All the books related to universityName11",res.data)
         })
         .catch(err => {
           console.log(err);
@@ -202,7 +243,7 @@ export  const FirstAddBook = (props) => {
     axios
 			.post(`http://localhost:8000/profile/${userid}/AddDonatedBook`, {
         userId: userIdFromToken,
-        // bookId: searchItems.bookId
+        bookId: searchItems.bookId
 			})
 			.then((response) => {
 				console.log(response.data);
@@ -212,8 +253,8 @@ export  const FirstAddBook = (props) => {
       });
       alert("You added New Book")
    }
-  //  console.log("boook iiid",searchItems.bookId)
-  //  console.log("user iiid",userIdFromToken)
+   console.log("boook iiid",searchItems.bookId)
+   console.log("user iiid",userIdFromToken)
 
 
  
@@ -225,30 +266,14 @@ export  const FirstAddBook = (props) => {
           }
         }
       };
-
-      const handleChange = event => setSearchValue(event.target.value);
-    RegExp.quote = function(searchValue) {
-    return searchValue.replace(/([.?*+^$[\]\\(){}|-])/gi, "\\$1");
-    };
-    const regex = new RegExp(RegExp.quote(searchValue), 'gi')
-   
-    var searchItems = allbooksOfUniv.filter(function (hero) {
-    if (allbooksOfUniv) {
-      if (searchValue) {
-        return hero.bookName.match(regex);
-      }
-    }
-    });
     
       return (
        <div>
           <NavBar />
-          <br/>
+
           <Container>
-          <h2>Add New Book</h2>
-          <br />
-          <br />
-          <br />
+          <h2 className={classes.h2}>Add New Book</h2>
+          <div className={classes.formStyle}>
           <form noValidate autoComplete="off" >
               <div>
               <FormControl variant="filled" className={classes.formControl}>
@@ -257,22 +282,22 @@ export  const FirstAddBook = (props) => {
               </InputLabel>
 
               <Select
+                className={classes.textfield}
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 value={choosenUniv}
                 onChange={onUniChange}
               >
                 {allUnivs.map((univ) => (
-                <MenuItem key={univ._id} value={univ._id}>{univ.universityName}</MenuItem>
+                <MenuItem key={univ._id} value={univ.universityName}>{univ.universityName}</MenuItem>
                  ))}
               </Select>
               <div>
-              <br/>
-              <br/>
+
               
             </div>
             </FormControl>
-            <Typography>
+            <Typography className={classes.paragraf}>
               Enter the Name of Book
               </Typography>
             <Toolbar className={classes.allSearch}>
@@ -292,9 +317,7 @@ export  const FirstAddBook = (props) => {
               />
             </div>    
           </Toolbar>
-          <br/>
-          <br/>
-          <br/>
+
           <div className={classes.result}>
           
             <div >
@@ -311,16 +334,16 @@ export  const FirstAddBook = (props) => {
 								>
 								   <h3 style={{marginBottom:5}}>{item.bookName}</h3>
 								</Link>
-                <br/>
+
                 <h3 style={{marginBottom:5}}>{item.bookDescription}</h3>
-                <Button style={{marginBottom:5}} variant="contained" color="primary" onClick={handleSumbit}>Donate this Book </Button>
+                <Button style={{marginBottom:5}} variant="contained" color="primary" onClick={handleSumbit} className={classes.subBut}>Donate this Book </Button>
                 </Grid>
               </Grid>
               ))
               :
               <Grid  className={classes.searchItem} container>
                 <Link href={`/profile/${userIdFromToken}/addBlueprintDonatedBook`} style={{color: 'black'}}>
-                <Button style={{marginBottom:5}} variant="contained" color="primary" >Add New Book 
+                <Button style={{marginBottom:5}} variant="contained" color="primary" className={classes.submitBut}>Add New Book 
                 </Button>
                 </Link>
               </Grid>
@@ -329,7 +352,8 @@ export  const FirstAddBook = (props) => {
             </div>
              </div>
             </div>
-          </form>  
+          </form> 
+          </div> 
           </Container>
    
        </div>
